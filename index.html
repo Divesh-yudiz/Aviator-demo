@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Betting Game</title>
+  <style>
+    :root {
+      --shadow: hsl(198, 6%, 71%);
+      --shadow2: hsl(194, 4%, 63%);
+      --bg-light: hsl(206, 47%, 80%);
+      --bg-primary: hsl(203, 92%, 52%);
+      --bg-secondary: hsl(202, 9%, 96%);
+      --accent-dark: hsl(203, 26%, 59%);
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      display: flex;
+      height: 100vh;
+    }
+
+    .left-panel {
+      flex: 1;
+      background-color: #727171;
+      padding: 20px;
+    }
+
+    .right-panel {
+      flex: 3;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .contestant-list {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .contestant-list li {
+      padding: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .contestant-list li:hover {
+      background-color: #3c3c3c;
+    }
+
+    #app {
+      width: 100%;
+      height: 70%;
+      background-color: #000;
+    }
+
+    .container-controls {
+      display: flex;
+      padding: 20px;
+      justify-content: space-between;
+      height: 50%;
+      gap: 20px;
+    }
+
+    .leftControls,
+    .rightControls {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .bet-controls {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: 10px;
+    }
+
+    .bet-controls button,
+    .start-bet-button {
+      width: 80px;
+      height: 80px;
+      border-radius: 6px;
+      border: 0;
+      position: relative;
+      outline: none;
+      background-color: var(--bg-secondary);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .start-bet-button,
+    .cash-out {
+      margin-left: 20px;
+      width: 100%;
+      height: 100%;
+      font-size: 1.2rem;
+      font-weight: bold;
+      border-radius: 6px;
+      border: 0;
+      position: relative;
+      outline: none;
+      background-color: var(--bg-secondary);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .start-bet-button[aria-pressed="true"],
+    .cash-out[aria-pressed="true"] {
+      background: radial-gradient(ellipse at 0% 20%, var(--bg-light), 35%, var(--bg-primary) 60%);
+      color: #fff;
+    }
+
+    .start-bet-button[aria-pressed="false"]:is(:hover, :focus-visible),
+    .cash-out[aria-pressed="false"]:is(:hover, :focus-visible) {
+      color: var(--bg-primary);
+      background: #fff;
+      outline: 2px solid var(--bg-primary);
+    }
+
+    .start-bet-button:active:not([aria-pressed="true"]),
+    .cash-out:active:not([aria-pressed="true"]) {
+      background-color: var(--accent-dark);
+      color: #fff;
+      outline: 2px solid var(--bg-primary);
+      outline-offset: -2px;
+      transform: scale(0.93);
+    }
+
+    .number-input {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .number-input button {
+      width: 40px;
+      height: 40px;
+      border-radius: 6px;
+      border: 0;
+      background-color: var(--bg-secondary);
+      cursor: pointer;
+      font-size: 1.2rem;
+    }
+
+    .number-input button:hover {
+      color: var(--bg-primary);
+      background: #fff;
+      outline: 2px solid var(--bg-primary);
+    }
+
+    .number-input button:active {
+      background-color: var(--accent-dark);
+      color: #fff;
+      transform: scale(0.95);
+    }
+
+    .number-input input {
+      width: 80px;
+      height: 40px;
+      border: 2px solid var(--bg-secondary);
+      border-radius: 6px;
+      text-align: center;
+      font-size: 1.1rem;
+    }
+
+    .number-input input:focus {
+      outline: 2px solid var(--bg-primary);
+      border-color: transparent;
+    }
+
+    .bet-controls button:hover {
+      color: var(--bg-primary);
+      background: #fff;
+      outline: 2px solid var(--bg-primary);
+    }
+
+    .bet-controls button:active {
+      background-color: var(--accent-dark);
+      color: #fff;
+      outline: 2px solid var(--bg-primary);
+      outline-offset: -2px;
+      transform: scale(0.95);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="left-panel">
+      <h2>Contestants</h2>
+      <ul class="contestant-list">
+        <li>Contestant 1</li>
+        <li>Contestant 2</li>
+        <li>Contestant 3</li>
+        <li>Contestant 4</li>
+        <li>Contestant 5</li>
+      </ul>
+    </div>
+    <div class="right-panel">
+      <div id="app"></div>
+      <div class="container-controls">
+        <div class="leftControls">
+          <div class="number-input">
+            <button class="decrease-btn">-</button>
+            <input type="number" class="bet-amount" value="10" min="10">
+            <button class="increase-btn">+</button>
+          </div>
+          <div class="bet-controls">
+            <button aria-pressed="false" class="bet-10">10</button>
+            <button aria-pressed="false" class="bet-50">50</button>
+            <button aria-pressed="false" class="bet-100">100</button>
+            <button aria-pressed="false" class="bet-500">500</button>
+          </div>
+        </div>
+        <button class="start-bet-button" aria-pressed="false">Start Bet</button>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="src/main.js"></script>
+</body>
+
+</html>
